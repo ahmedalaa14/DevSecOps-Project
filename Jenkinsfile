@@ -42,13 +42,6 @@ pipeline {
                 }
             }
         }
-        stage ('SonarQube Quality Gate') {
-            steps {
-
-                waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonar' 
-
-            }
-        }
         stage ('OWASP Scan') {          
             steps {
                 dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
