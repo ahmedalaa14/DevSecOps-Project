@@ -73,7 +73,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: "DockerHub-Credentail", usernameVariable:"username", passwordVariable:"password")]) {
                         sh '''
                         echo "${password}" | docker login -u "${username}" --password-stdin
-                        docker push ahmedalaa14/netflix-app:1.0
+                        docker push ahmedalaa14/netflix-app
                         '''
                     }
                 }
