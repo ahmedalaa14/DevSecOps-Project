@@ -2,14 +2,12 @@ pipeline {
     agent any 
 
     tools {
-
         nodejs 'nodejs'
     }
     environment {
-
         SCANNER_HOME = tool name: 'sonarqube'
-        Docker_Credential = "DockerHub-Credentail"                                   
-
+        Docker_Credential = "DockerHub-Credentail"  
+        kubectl_path = "/usr/local/bin/kubectl"                                  
     }
 
     stages {
@@ -21,7 +19,7 @@ pipeline {
 
         stage ('Checkout') {
             steps {
-                      git branch: 'main', url: 'https://github.com/ahmedalaa14/DevSecOps-Project'
+                git branch: 'main', url: 'https://github.com/ahmedalaa14/DevSecOps-Project'
             }
         }
 
@@ -30,11 +28,13 @@ pipeline {
                 sh 'npm install'
             }
         }
+
         stage ('build') {
             steps {
                 sh 'npm run build'
             }
         }
+
         stage ('SonarQube analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') {
@@ -50,6 +50,7 @@ pipeline {
                 sh ' trivy fs . > trivy-report.txt ' 
             }
         }
+
         stage ('Docker Image Build and Run') {
             steps {
                 sh '''
@@ -57,15 +58,48 @@ pipeline {
                 docker image ls
                 docker run  -d -p 8081:80 --name netflix ahmedalaa14/netflix-app
                 '''
-
             }
         }  
+
         stage ('Scan Docker Image') {
             steps {
-                  sh "trivy image ahmedalaa14/netflix-app > trivyimage.txt" 
+                sh "trivy image ahmedalaa14/netflix-app > trivyimage.txt" 
             }
         }
-            
-            
+
+        stage('Push Docker Image to DockerHub') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: "DockerHub-Credentail", usernameVariable:"username", passwordVariable:"password")]) {
+                        sh '''
+                        echo "${password}" | docker login -u "${username}" --password-stdin
+                        docker push ahmedalaa14/netflix-app
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to kubernets') {
+            steps {
+                script {
+                    dir('kubernetes') {
+                        sh 'kubectl apply -f deployment.yml'
+                        sh 'kubectl apply -f service.yml'
+                    }   
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            emailext attachLog: true,
+                subject: "'${currentBuild.result}'",
+                body: "Project: ${env.JOB_NAME}<br/>" +
+                    "Build Number: ${env.BUILD_NUMBER}<br/>" +
+                    "URL: ${env.BUILD_URL}<br/>",
+                to: 'ahmedmokhtar14600@gmail.com'
+        }
     }
 }
