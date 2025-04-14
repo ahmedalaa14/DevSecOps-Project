@@ -4,8 +4,7 @@
 
 ## CI/CD Pipeline Diagram
 
-[![CI/CD Diagram](public/assets/CI-CD.png)](https://github.com/ahmedalaa14/DevSecOps-Project/blob/main/public/assets/CI-CD.pdf)
-
+[![CI/CD Diagram](./public/assets/CI-CD.png)](./public/assets/CI-CD.pdf)
 
 - Developers push code changes to GitHub with a commit message.  
 - Jenkins automatically triggers the CI/CD pipeline.  
