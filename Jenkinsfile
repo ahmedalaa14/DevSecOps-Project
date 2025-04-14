@@ -50,11 +50,11 @@ pipeline {
         }
         stage ('Docker Image Build and Run') {
             steps {
-                sh """"
+                sh '''
                 docker build -t ahmedalaa14/netflix-app .
                 docker image ls
                 docker run  -d -p 8081:80 --name netflix-app ahmedalaa14/netflix-app
-                """
+                '''
 
             }
         }  
