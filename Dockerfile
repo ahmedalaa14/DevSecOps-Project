@@ -1,4 +1,4 @@
-FROM node:16.17.0-apline as builder
+FROM node:18-alpine as builder
 
 WORKDIR /app
 
@@ -6,13 +6,13 @@ COPY ./package.json .
 
 COPY ./yarn.lock .
 
-RUN yarn insatll 
+RUN yarn install 
 
 COPY . .
 
 RUN yarn build
 
-FROM nginx:satble-alpine as runner
+FROM nginx:stable-alpine as runner
 
 WORKDIR /usr/share/nginx/html
 
@@ -22,4 +22,4 @@ COPY --from=builder /app/dist .
 
 EXPOSE 80
 
-ENTRYPOINT [ "nginx" , "-g" , "daemon off;" ]
+ENTRYPOINT [ "nginx", "-g", "daemon off;" ]
