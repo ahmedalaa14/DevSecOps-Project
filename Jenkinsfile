@@ -11,12 +11,6 @@ pipeline {
     }
 
     stages {
-        stage ("workspace cleanup") {
-            steps {
-                cleanWs()
-            }
-        }
-
         stage ('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/ahmedalaa14/DevSecOps-Project'
@@ -83,11 +77,11 @@ pipeline {
         stage('Deploy to kubernetes') {
             steps {
                 script {
-                  //  dir('kubernetes') {
-                     //   withCredentials([file(credentialsId: 'kubeconfig-credential-id', variable: 'KUBECONFIG')])
-                     //   sh 'kubectl apply -f deployment.yml'
-                     //   sh 'kubectl apply -f service.yml'
-                  //  }   
+                   // dir('kubernetes') {
+                    //    withCredentials([file(credentialsId: 'kubeconfig-credential-id', variable: 'KUBECONFIG')])
+                    //    sh 'kubectl apply -f deployment.yml'
+                    //    sh 'kubectl apply -f service.yml'
+                   // }   
                 }
             }
         }
