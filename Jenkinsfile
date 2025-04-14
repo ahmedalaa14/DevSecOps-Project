@@ -8,6 +8,8 @@ pipeline {
     environment {
 
         SCANNER_HOME = tool name: 'sonarqube'
+        Docker_Credential = "DockerHub-Credentail"                                   
+
     }
 
     stages {
