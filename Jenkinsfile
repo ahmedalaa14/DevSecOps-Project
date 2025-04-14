@@ -33,7 +33,47 @@ pipeline {
                 sh 'npm run build'
             }
         }
-       
-    }
+        stage ('SonarQube analysis') {
+            withSonarQubeEnv('sonarqube') {
+                sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=netflix-app \
+                    -Dsonar.projectKey=netflix-app \
+                '''
+            }
+        }
+        stage ('SonarQube Quality Gate') {
+            steps {
 
+                waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonar' 
+
+            }
+        }
+        stage ('OWASP Scan') {          
+            steps {
+                dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+        stage('Trivy Scan') {
+            steps {
+                sh ' trviy fs . > trivy-report.txt'
+            }
+        }
+        stage ('Docker Image Build') {
+            steps {
+                sh """"
+                docker build -t ahmedalaa14/netflix-app .
+                docker image ls
+                docker run  -d -p 8081:80 --name netflix-app ahmedalaa14/netflix-app
+                """
+
+            }
+        }  
+        stage ('Scan Docker Image') {
+            steps {
+                  sh "trivy image ahmedalaa14/netflix-app > trivyimage.txt" 
+            }
+        }
+            
+            
+    }
 }
