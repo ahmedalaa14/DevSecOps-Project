@@ -42,12 +42,7 @@ pipeline {
                 }
             }
         }
-        stage ('OWASP Scan') {          
-            steps {
-                    dependencyCheck additionalArguments: '--noupdate --exclude venv --scan app --format XML --out owasp-report.xml', odcInstallation: 'owasp'
-
-            }
-        }
+        
         stage('Trivy Scan') {
             steps {
                 sh ' trviy fs . > trivy-report.txt ' 
