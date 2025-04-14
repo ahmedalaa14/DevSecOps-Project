@@ -77,6 +77,7 @@ pipeline {
         stage('Deploy to kubernetes') {
             steps {
                 script {
+                    sh ' echo "hello" '
                    // dir('kubernetes') {
                     //    withCredentials([file(credentialsId: 'kubeconfig-credential-id', variable: 'KUBECONFIG')])
                     //    sh 'kubectl apply -f deployment.yml'
@@ -90,10 +91,10 @@ pipeline {
     post {
         always {
             emailext attachLog: true,
-                subject: "'${currentBuild.result}'",
-                body: "Project: ${env.JOB_NAME}<br/>" +
-                    "Build Number: ${env.BUILD_NUMBER}<br/>" +
-                    "URL: ${env.BUILD_URL}<br/>",
+                subject: "'${currentBuild.result}' Build Notification",
+                body: """<p>Project: ${env.JOB_NAME}</p>
+                         <p>Build Number: ${env.BUILD_NUMBER}</p>
+                         <p>URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>""",
                 to: 'ahmedmokhtar14600@gmail.com'
         }
     }
