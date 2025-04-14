@@ -34,10 +34,12 @@ pipeline {
             }
         }
         stage ('SonarQube analysis') {
-            withSonarQubeEnv('sonarqube') {
-                sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=netflix-app \
-                    -Dsonar.projectKey=netflix-app \
-                '''
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=netflix-app \
+                        -Dsonar.projectKey=netflix-app \
+                    '''
+                }
             }
         }
         stage ('SonarQube Quality Gate') {
