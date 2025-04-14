@@ -11,12 +11,6 @@ pipeline {
     }
 
     stages {
-        stage ("workspace cleanup") {
-            steps {
-                cleanWs()
-            }
-        }
-
         stage ('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/ahmedalaa14/DevSecOps-Project'
