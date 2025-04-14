@@ -58,7 +58,7 @@ pipeline {
                 sh ' trviy fs . > trivy-report.txt'
             }
         }
-        stage ('Docker Image Build') {
+        stage ('Docker Image Build and Run') {
             steps {
                 sh """"
                 docker build -t ahmedalaa14/netflix-app .
