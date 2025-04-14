@@ -80,7 +80,7 @@ pipeline {
             }
         }
 
-        stage('Deploy to kubernets') {
+        stage('Deploy to kubernetes') {
             steps {
                 script {
                     dir('kubernetes') {
