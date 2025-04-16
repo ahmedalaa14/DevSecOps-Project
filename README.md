@@ -1,6 +1,6 @@
 # DevSecOps Project
 
-> project focuses on the secure and scalable deployment of a Netflix application on Kubernetes, integrating DevSecOps best practices. 
+ > The project focuses on the secure and scalable deployment of a Netflix application on Kubernetes, integrating DevSecOps best practices. 
 
 ## CI/CD Pipeline Diagram
 
